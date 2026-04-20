@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BrainFuckDotNet": {
+      "commandName": "Project",
+      "commandLineArgs": "hello.bf hello"
+    }
+  }
+}
