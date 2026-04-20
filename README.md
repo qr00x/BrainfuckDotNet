@@ -12,5 +12,5 @@ Above code reads five character string from standard input and display character
 ```
 1. git clone https://github.com/qr00x/BrainfuckDotNet.git
 3. dotnet build .\BrainfuckDotNet.slnx
-4. BrainfuckDotNet.exe <SourceFileName> <OutputAssemblyName>
+4. dotnet BrainfuckDotNet.exe <SourceFileName> <OutputAssemblyName>
 ```
