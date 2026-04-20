@@ -1,5 +1,5 @@
 # Brainfuck.NET
-This project is toy compiler of esoteric Brainfuck programming language into dotNet executable.
+This project is a toy compiler of esoteric Brainfuck programming language into dotNet executable.
 
 # Example of Brainfuck source code
 ```
