@@ -80,7 +80,7 @@ namespace BrainFuckDotNet.Compiler
 			il.Emit(OpCodes.Ldloc_0);
 			il.Emit(OpCodes.Ldloc_1);
 			il.Emit(OpCodes.Ldelem_U1);
-			il.Emit(OpCodes.Brtrue_S, label);
+			il.Emit(OpCodes.Brtrue, label);
 		}
 
 		private void EmitInc(ILGenerator il)
