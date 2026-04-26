@@ -1,64 +1,70 @@
-﻿using BrainFuckDotNet.Abstract;
+﻿using System.Text;
+using BrainfuckDotNet.Parser;
 
 namespace BrainFuckDotNet.Parser
 {
 	internal class BrainFuckParser
 	{
-		public AbstractSyntaxTree Parse(string codeBody)
+		public static char[] Keywords = ['+', '-', '<', '>', '[', ']', ',', ',']; 
+
+		public LexerResult Parse(string codeBody)
 		{
-			var tree = new AbstractSyntaxTree();
-			var nestingStack = new Stack<Loop>();
-
-			foreach (var i in codeBody)
+			var result = new LexerResult();
+			var rowNumber = 1;
+			var colNumber = 1;
+			
+			for (var i = 0; i < codeBody.Length; i++)
 			{
-				if (i == '[')
+				var c = codeBody[i];
+				if (TryParse(c, result, rowNumber, colNumber))
 				{
-					nestingStack.Push(new Loop());
 					continue;
 				}
 
-				if (i == ']')
-				{
-					var loop = nestingStack.Pop();
-					if (nestingStack.Count > 0)
-					{
-						nestingStack.Peek().AddNode(loop);
-					}
-					else
-					{
-						tree.AddNode(loop);
-					}
-
-					continue;
-				}
-
-				var operationn = ParseOperation(i);
-				if (nestingStack.Count > 0)
-				{
-					nestingStack.Peek().AddInstructionNode(operationn);
+				if (c == '\r')
+				{ 
+					rowNumber++;
+					colNumber = 1;
+					i++;
 				}
 				else
 				{
-					tree.AddNode(new Instraction() { OpCode = operationn });
+					if (c == ' ')
+					{
+						colNumber++;
+					}
+					else
+					{
+						var comment = new StringBuilder();
+						var j = i;
+
+						while (codeBody[j] != '\r')
+						{
+							comment.Append(codeBody[j++]);
+						}
+
+						i = j - 1;
+						result.AddToken(comment.ToString(), TokenType.Comment, rowNumber, colNumber);
+					}
 				}
 			}
 
-			return tree;
+			return result;
 		}
 
-		private Operation ParseOperation(char op)
+		private static bool TryParse(char c, LexerResult result, int rowNumber, int colNumber)
 		{
-			switch (op)
+			switch (c)
 			{
-				case '+': return Operation.Inc;
-				case '-': return Operation.Dec;
-				case '>': return Operation.Right;
-				case '<': return Operation.Left;
-				case ',': return Operation.In;
-				case '.': return Operation.Out;
-				default:
-					throw new InvalidOperationException("Syntax not supported.");
-
+				case '[': result.AddToken(c.ToString(), TokenType.LoopBegin, rowNumber, colNumber); return true;
+				case ']': result.AddToken(c.ToString(), TokenType.LoopEnd, rowNumber, colNumber); return true;
+				case '+': result.AddToken(c.ToString(), TokenType.Inc, rowNumber, colNumber); return true;
+				case '-': result.AddToken(c.ToString(), TokenType.Dec, rowNumber, colNumber); return true;
+				case '<': result.AddToken(c.ToString(), TokenType.Left, rowNumber, colNumber); return true;
+				case '>': result.AddToken(c.ToString(), TokenType.Right, rowNumber, colNumber); return true;
+				case ',': result.AddToken(c.ToString(), TokenType.In, rowNumber, colNumber); return true;
+				case '.': result.AddToken(c.ToString(), TokenType.Out, rowNumber, colNumber); return true;
+				default: return false;
 			}
 		}
 	}

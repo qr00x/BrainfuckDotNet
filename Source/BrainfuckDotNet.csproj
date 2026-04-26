@@ -11,6 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Artifacts\runtimeconfig.json"/>
+    <EmbeddedResource Include="Artifacts\runtimeconfig.json" />
   </ItemGroup>
 </Project>
